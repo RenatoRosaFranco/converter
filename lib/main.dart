@@ -15,22 +15,43 @@ final request = Uri(
 );
 
 void main() async {
-  http.Response response = await http.get(request);
-  print(json.decode(response.body)['results']['currencies']['USD']);
-
-  print(response.body);
-
   runApp(const MaterialApp(
     debugShowCheckedModeBanner: false,
-    home: MyApp(),
+    home: Home(),
   ));
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+class Home extends StatefulWidget {
+  const Home({Key? key}) : super(key: key);
 
   @override
+  State<Home> createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
+  @override
   Widget build(BuildContext context) {
-    return Container();
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.amber,
+        centerTitle: true,
+        title: const Text(
+          '\$ Conversor \$',
+          style: TextStyle(
+            fontWeight: FontWeight.bold
+          ),
+        ),
+      ),
+      body: Container(
+        color: Colors.black,
+      ),
+    );
   }
 }
+
+Future<Map> getData() async {
+  http.Response response = await http.get(request);
+  return json.decode(response.body)['results']['currencies']['USD'];
+}
+
+
