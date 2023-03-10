@@ -42,9 +42,41 @@ class _HomeState extends State<Home> {
           ),
         ),
       ),
-      body: Container(
-        color: Colors.black,
-      ),
+      body: FutureBuilder<Map>(
+        future: getData(),
+        builder: (context, snapshot) {
+          switch(snapshot.connectionState) {
+            case ConnectionState.none:
+            case ConnectionState.waiting:
+              return const Center(
+                child: Text(
+                  'Carregando Dados...',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.amber,
+                    fontSize: 25.0
+                  ),
+                ),
+              );
+            default:
+              if (snapshot.hasError) {
+                return const Center(
+                  child: Text(
+                    'Erro ao Carregar Dados',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        color: Colors.amber,
+                        fontSize: 25.0
+                    ),
+                  ),
+                );
+              } else {
+                return Container(
+                  color: Colors.green,
+                );
+              }
+          }
+        }),
     );
   }
 }
