@@ -4,16 +4,6 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:async';
 
-final request = Uri(
-    scheme: 'https',
-    host: 'api.hgbrasil.com',
-    path: '/finance',
-    queryParameters: {
-      'format': 'json',
-      'key': 'b6a9c994'
-   }
-);
-
 void main() async {
   runApp(MaterialApp(
     debugShowCheckedModeBanner: false,
@@ -39,6 +29,16 @@ class _HomeState extends State<Home> {
   final realController  = TextEditingController();
   final dolarController = TextEditingController();
   final euroController  = TextEditingController();
+
+  final request = Uri(
+      scheme: 'https',
+      host: 'api.hgbrasil.com',
+      path: '/finance',
+      queryParameters: {
+        'format': 'json',
+        'key': 'b6a9c994'
+      }
+  );
 
   void _clearAll() {
     realController.text  = "";
@@ -133,7 +133,7 @@ class _HomeState extends State<Home> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      Padding(
+                      const Padding(
                         padding: EdgeInsets.only(top: 30, bottom: 30),
                         child: Icon(
                           Icons.monetization_on,
@@ -153,11 +153,11 @@ class _HomeState extends State<Home> {
         }),
     );
   }
-}
 
-Future<Map> getData() async {
-  http.Response response = await http.get(request);
-  return json.decode(response.body)["results"]["currencies"];
+  Future<Map> getData() async {
+    http.Response response = await http.get(request);
+    return json.decode(response.body)["results"]["currencies"];
+  }
 }
 
 Widget buildTextField(String label, String prefix, TextEditingController controller, action) {
