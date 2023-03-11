@@ -40,16 +40,43 @@ class _HomeState extends State<Home> {
   final dolarController = TextEditingController();
   final euroController  = TextEditingController();
 
+  void _clearAll() {
+    realController.text  = "";
+    dolarController.text = "";
+    euroController.text  = "";
+  }
+
   void _realChanged(String text) {
-    print(text);
+    if (text.isEmpty) {
+      _clearAll();
+      return;
+    }
+
+    double real = double.parse(text);
+    dolarController.text = (real / dolar).toStringAsFixed(2);
+    euroController.text = (real / euro).toStringAsFixed(2);
   }
 
   void _dolarChanged(String text) {
-    print(text);
+    if (text.isEmpty) {
+      _clearAll();
+      return;
+    }
+
+    double dolar = double.parse(text);
+    realController.text = (dolar * this.dolar).toStringAsFixed(2);
+    euroController.text = (dolar * this.dolar / euro).toStringAsFixed(2);
   }
 
   void _euroChanged(String text) {
-    print(text);
+    if (text.isEmpty) {
+      _clearAll();
+      return;
+    }
+
+    double euro = double.parse(text);
+    realController.text = (euro * this.euro).toStringAsFixed(2);
+    dolarController.text = (euro * this.euro / dolar).toStringAsFixed(2);
   }
 
   @override
@@ -98,19 +125,21 @@ class _HomeState extends State<Home> {
               } else {
                 final Map data = snapshot.data!;
 
-                // dolar = data["results"]["currencies"]["USD"]["buy"];
-                // euro = data["results"]["currencies"]["EUR"]["buy"];
+                dolar = data['USD']['buy'];
+                euro  = data['EUR']["buy"];
 
                 return SingleChildScrollView(
                   padding: const EdgeInsets.all(10.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      const Icon(
+                      Padding(
+                        padding: EdgeInsets.only(top: 30, bottom: 30),
+                        child: Icon(
                           Icons.monetization_on,
                           size: 150.0, color:
                           Colors.amber
-                      ),
+                      )),
                       buildTextField('Reais', 'R\$', realController, _realChanged),
                       const Divider(),
                       buildTextField('Dólares', 'US\$', dolarController, _dolarChanged),
@@ -128,14 +157,14 @@ class _HomeState extends State<Home> {
 
 Future<Map> getData() async {
   http.Response response = await http.get(request);
-  return json.decode(response.body)["results"]["currencies"]["USD"];
+  return json.decode(response.body)["results"]["currencies"];
 }
 
 Widget buildTextField(String label, String prefix, TextEditingController controller, action) {
   return TextField(
     controller: controller,
     onChanged: action,
-    keyboardType: TextInputType.number,
+    keyboardType: const TextInputType.numberWithOptions(decimal: true),
     decoration: InputDecoration(
         labelText: label,
         labelStyle: const TextStyle(color: Colors.amber),
