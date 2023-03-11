@@ -17,7 +17,7 @@ final request = Uri(
 void main() async {
   runApp(MaterialApp(
     debugShowCheckedModeBanner: false,
-    home: Home(),
+    home: const Home(),
     theme: ThemeData(
       hintColor: Colors.amber,
       primaryColor: Colors.white
@@ -35,6 +35,22 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   late double dolar;
   late double euro;
+
+  final realController  = TextEditingController();
+  final dolarController = TextEditingController();
+  final euroController  = TextEditingController();
+
+  void _realChanged(String text) {
+    print(text);
+  }
+
+  void _dolarChanged(String text) {
+    print(text);
+  }
+
+  void _euroChanged(String text) {
+    print(text);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -86,85 +102,20 @@ class _HomeState extends State<Home> {
                 // euro = data["results"]["currencies"]["EUR"]["buy"];
 
                 return SingleChildScrollView(
-                  padding: EdgeInsets.all(10.0),
+                  padding: const EdgeInsets.all(10.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: const [
-                      Icon(Icons.monetization_on, size: 150.0, color: Colors.amber),
-                      TextField(
-                        decoration: InputDecoration(
-                          labelText: 'Reais',
-                          labelStyle: TextStyle(color: Colors.amber),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: Colors.amber
-                            )
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: Colors.amber
-                            )
-                          ),
-                          hintStyle: TextStyle(
-                            color: Colors.amber
-                          ),
-                          prefixText: "R\$",
-                        ),
-                        style: TextStyle(
-                          color: Colors.amber,
-                          fontSize: 25.0
-                        ),
+                    children: [
+                      const Icon(
+                          Icons.monetization_on,
+                          size: 150.0, color:
+                          Colors.amber
                       ),
-                      Divider(),
-                      TextField(
-                        decoration: InputDecoration(
-                          labelText: 'Dólares',
-                          labelStyle: TextStyle(color: Colors.amber),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: Colors.amber
-                            )
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: Colors.amber
-                            )
-                          ),
-                          prefixText: "US\$",
-                          hintStyle: TextStyle(
-                            color: Colors.amber
-                          )
-                        ),
-                        style: TextStyle(
-                            color: Colors.amber,
-                            fontSize: 25.0
-                        ),
-                      ),
-                      Divider(),
-                      TextField(
-                        decoration: InputDecoration(
-                          labelText: 'Euros',
-                          labelStyle: TextStyle(color: Colors.amber),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: Colors.amber
-                            )
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: Colors.amber
-                            )
-                          ),
-                          prefixText: "€",
-                          hintStyle: TextStyle(
-                            color: Colors.amber
-                          )
-                        ),
-                        style: TextStyle(
-                            color: Colors.amber,
-                            fontSize: 25.0
-                        ),
-                      )
+                      buildTextField('Reais', 'R\$', realController, _realChanged),
+                      const Divider(),
+                      buildTextField('Dólares', 'US\$', dolarController, _dolarChanged),
+                      const Divider(),
+                      buildTextField('Euros', '€', euroController, _euroChanged)
                     ],
                   ),
                 );
@@ -180,4 +131,32 @@ Future<Map> getData() async {
   return json.decode(response.body)["results"]["currencies"]["USD"];
 }
 
-
+Widget buildTextField(String label, String prefix, TextEditingController controller, action) {
+  return TextField(
+    controller: controller,
+    onChanged: action,
+    keyboardType: TextInputType.number,
+    decoration: InputDecoration(
+        labelText: label,
+        labelStyle: const TextStyle(color: Colors.amber),
+        enabledBorder: const OutlineInputBorder(
+            borderSide: BorderSide(
+                color: Colors.amber
+            )
+        ),
+        focusedBorder: const OutlineInputBorder(
+            borderSide: BorderSide(
+                color: Colors.amber
+            )
+        ),
+        prefixText: prefix,
+        hintStyle: const TextStyle(
+            color: Colors.amber
+        )
+    ),
+    style: const TextStyle(
+        color: Colors.amber,
+        fontSize: 25.0
+    ),
+  );
+}
